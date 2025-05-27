@@ -26,7 +26,7 @@ app.post('/api/health-assistant-1', async (req, res) => {
 
     // Call OpenAI API to get a completion
     const completion = await openai.createChatCompletion({
-      model: "gpt-4o-mini",  // or "gpt-4", "gpt-3.5-turbo"
+      model: "gpt-4", // Replace with "gpt-3.5-turbo" if using GPT-3.5
       messages: [
         { role: "system", content: "You are a helpful health and wellness assistant." },
         { role: "user", content: userMessage }
@@ -50,3 +50,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
