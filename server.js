@@ -7,7 +7,7 @@ const app = express();
 
 // Add CORS middleware
 app.use(cors({
-    origin: 'https://cool-mochi-f0c07d.netlify.app/, // Replace with your WordPress site URL
+    origin: 'https://cool-mochi-f0c07d.netlify.app/', // Replace with your WordPress site URL
 }));
 
 // Middleware to parse JSON requests
