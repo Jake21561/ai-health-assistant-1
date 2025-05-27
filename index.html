@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Health Assistant</title>
+</head>
+<body>
+  <h1>AI Health Assistant</h1>
+  <input type="text" id="userInput" placeholder="Type your question here..." />
+  <button onclick="sendMessage()">Submit</button>
+  <pre id="response"></pre>
+
+  <script>
+    async function sendMessage() {
+      const userInput = document.getElementById('userInput').value;
+      const responseBox = document.getElementById('response');
+
+      if (!userInput.trim()) {
+        responseBox.textContent = 'Please enter a question.';
+        return;
+      }
+
+      responseBox.textContent = 'Loading...';
+
+      try {
+        const res = await fetch('https://<your-app-name>.onrender.com/api/health-assistant', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: userInput })
+        });
+
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+
+        const data = await res.json();
+        responseBox.textContent = data.reply || 'No response from server.';
+      } catch (err) {
+        responseBox.textContent = `Error: ${err.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
