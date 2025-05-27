@@ -14,7 +14,7 @@ app.use(cors({
 app.use(express.json());
 
 // Define the health assistant endpoint
-app.post('/api/health-assistant', (req, res) => {
+app.post('/api/health-assistant-1', (req, res) => {
     const userMessage = req.body.message;
 
     // Simulate AI response
