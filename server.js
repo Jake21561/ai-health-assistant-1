@@ -1,33 +1,52 @@
-// Import required modules
 const express = require('express');
 const cors = require('cors');
+const { Configuration, OpenAIApi } = require('openai');
 
 // Initialize the Express app
 const app = express();
 
-// Add CORS middleware
+// CORS middleware — make sure to update origin with your frontend URL
 app.use(cors({
-    origin: 'https://cool-mochi-f0c07d.netlify.app', // Replace with your WordPress site URL
+    origin: 'https://cool-mochi-f0c07d.netlify.app/', 
 }));
 
-// Middleware to parse JSON requests
+// JSON parser middleware
 app.use(express.json());
 
-// Define the health assistant endpoint
-app.post('/api/health-assistant-1', (req, res) => {
+// Set up OpenAI with your API key from environment variables
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+// Your API endpoint
+app.post('/api/health-assistant-1', async (req, res) => {
+  try {
     const userMessage = req.body.message;
 
-    // Simulate AI response
-    const aiResponse = `You said: ${userMessage}. Here's an AI response.`;
+    // Call OpenAI API to get a completion
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4o-mini",  // or "gpt-4", "gpt-3.5-turbo"
+      messages: [
+        { role: "system", content: "You are a helpful health and wellness assistant." },
+        { role: "user", content: userMessage }
+      ],
+      max_tokens: 300,
+    });
 
-    // Send back the response
+    const aiResponse = completion.data.choices[0].message.content;
+
+    // Send the AI's response back to the frontend
     res.json({ reply: aiResponse });
+
+  } catch (error) {
+    console.error("OpenAI API error:", error);
+    res.status(500).json({ reply: "Sorry, something went wrong with the AI." });
+  }
 });
 
-// Define the port
+// Start server
 const PORT = process.env.PORT || 3000;
-
-// Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
